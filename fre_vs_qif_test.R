@@ -49,7 +49,7 @@ get_current <- function(mode, I0, omega, t.init, t.final){
 }
 
 # Different current distributions
-current <- get_current("square", I0 = 1.1, t.init = 0, t.final = 10)
+current <- get_current("square", I0 = 3, t.init = 0, t.final = 10)
 # current <- get_current("sin", I0 = 1, omega = 2*pi, t.init = 0, t.final = 30)
 
 curr_imp <- approxfun(current$times, current$I, rule = 2)
