@@ -11,7 +11,7 @@ using std::tan;
 int main (int, char **) {
 	// Time
 	double t_final = 2.0, t_init = 0.0;
-	double h = 0.01;
+	double h = 0.001;
 	int steps = int((t_final - t_init)/h);
 
 	// Parameters
@@ -31,16 +31,14 @@ int main (int, char **) {
 	std::fill_n(I, steps+1, I0);
 
 	// Voltage matrix
-	// double v[2][neurons];
-	// for (int n = 0; n < neurons; n++) {
-	// 	v[0][n] = v0;
-	// }
-
 	double **v = new double*[steps + 1];
 	for (size_t n = 0; n < neurons; n++) {
 		v[n] = new double[neurons];
 	}
-
+	// Initialise v
+	for (int n = 0; n < neurons; n++) {
+		v[0][n] = v0;
+	}
 
 	// double v_avg2[steps + 1] = {v0}; // Gives some random warning
 	double v_avg[steps + 1];
