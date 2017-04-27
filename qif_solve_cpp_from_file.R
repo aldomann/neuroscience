@@ -8,13 +8,13 @@ compile = F
 # Compile C++ file if needed
 # This won't work for C++ cin inputs (or of any kind, I would imagine)
 if (compile == T) {
-	system("g++ -o cpp/qif_solve_dyn cpp/qif_solve_dynamic.cpp; ./cpp/qif_solve_dyn")
-	# system("g++ -o cpp/qif_solve_simple10 cpp/qif_solve_simple.cpp; ./cpp/qif_solve_simple10")
+	system("cd cpp; g++ -o qif_solve_dyn qif_solve_dynamic.cpp; ./qif_solve_dyn")
+	# system("cd cpp; g++ -o qif_solve_simple10 qif_solve_simple.cpp; ./qif_solve_simple10")
 }
 
 read_qif.data <- function(){ # Manually select data file
-	v.qif <- t(fread("cpp/v_avg_dyn.dat", header = F))
-	# v.qif <- t(fread("cpp/v_avg10.dat", header = F))
+	# v.qif <- t(fread("cpp/v_avg_dyn.dat", header = F))
+	v.qif <- t(fread("cpp/v_avg10.dat", header = F))
 	v.qif <- v.qif[-nrow(v.qif),] # Remove last row
 	v.qif <- data.frame(v.avg = v.qif)
 	return(v.qif)
@@ -47,8 +47,8 @@ get_vplot <- function(plot.type = "qif"){
 	}
 }
 
-get_vplot()
-# get_vplot(plot.type = "fre+qif")
+# get_vplot()
+get_vplot(plot.type = "fre+qif")
 
 
 
