@@ -1,0 +1,35 @@
+---
+title: "Numerical Simulations"
+author: "Alfredo Hernández & Cristian Estany"
+date: "22 March 2017"
+output:
+  pdf_document:
+    toc: yes
+  html_notebook:
+    highlight: pygments
+    theme: cosmo
+    toc: yes
+---
+
+```{r, include=FALSE}
+library(tidyverse)
+library(reshape2)
+```
+
+```{r}
+etabar <- 5
+N <- 10000
+eta <- c()
+Delta <- 1
+```
+
+```{r}
+for(j in 1:N){
+	eta[j] <- etabar + Delta * atan(pi/2 * (2*j - N -1)/(N + 1))
+}
+
+eta.m <- melt(eta)
+ggplot(eta.m, aes(value)) +
+	geom_histogram(bins = 250)
+```
+
