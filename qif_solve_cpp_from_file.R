@@ -3,7 +3,16 @@ library(data.table)
 
 # Calculations ---------------------------------------------
 
-get_qif.data <- function(){ # Manually select data file
+compile = F
+
+# Compile C++ file if needed
+# This won't work for C++ cin inputs (or of any kind, I would imagine)
+if (compile == T) {
+	system("g++ -o cpp/qif_solve_dyn cpp/qif_solve_dynamic.cpp; ./cpp/qif_solve_dyn")
+	# system("g++ -o cpp/qif_solve_simple10 cpp/qif_solve_simple.cpp; ./cpp/qif_solve_simple10")
+}
+
+read_qif.data <- function(){ # Manually select data file
 	v.qif <- t(fread("cpp/v_avg_dyn.dat", header = F))
 	# v.qif <- t(fread("cpp/v_avg10.dat", header = F))
 	v.qif <- v.qif[-nrow(v.qif),] # Remove last row
@@ -11,7 +20,7 @@ get_qif.data <- function(){ # Manually select data file
 	return(v.qif)
 }
 
-v.qif <- get_qif.data()
+v.qif <- read_qif.data()
 
 get_fre.data <- function(){
 	source("fre_vs_qif_test.R")
@@ -38,7 +47,8 @@ get_vplot <- function(plot.type = "qif"){
 	}
 }
 
-# get_vplot(plot.type = "fre+qif")
 get_vplot()
+# get_vplot(plot.type = "fre+qif")
+
 
 
