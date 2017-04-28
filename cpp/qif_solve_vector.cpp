@@ -60,7 +60,7 @@ int main () {
 	v.erase( v.begin()+steps+1 ); // Erase last row
 
 	// Save values in text file
-	ofstream myfile ("v_avg_dyn.dat");
+	ofstream myfile ("v_avg_vec.dat");
 	if (myfile.is_open()){
 		for ( int i = 0; i < steps+1; i++ ) {
 			myfile << v_avg[i] << ", " ;

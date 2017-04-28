@@ -6,3 +6,5 @@
 /mails
 /docs
 README.html
+/cpp/*.dat
+/cpp/run_*
