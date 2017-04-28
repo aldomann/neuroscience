@@ -10,7 +10,7 @@ using std::tan;
 
 int main (int, char **) {
 	// Time
-	double t_final = 2.0, t_init = 0.0;
+	double t_final = 20.0, t_init = 0.0;
 	double h = 0.0001;
 	int steps = int((t_final - t_init)/h);
 
@@ -50,16 +50,9 @@ int main (int, char **) {
 			v[0][n] = v[1][n]; // Reset matrix
 			v_avg[i] += v[1][n];
 		}
+		// cout << "step " << i << "\n";
 		v_avg[i] = v_avg[i]/neurons;
 	}
-
-	// double v_avg[steps + 1] = {};
-	// for ( int i = 0; i < steps + 1; i++ ) {
-	// 	for (int n = 0; n < neurons; n++) {
-	// 		v_avg[i] += v[i][n];
-	// 	}
-	// 	v_avg[i] = v_avg[i]/neurons;
-	// }
 
 	// Save values in text file
 	ofstream myfile ("v_avg.dat");
