@@ -8,10 +8,10 @@ using std::tan;
 #include <cstdlib> // rand()
 #include <ctime>   // time()
 
-int main (int, char **) {
+int main () {
 	// Time
 	double t_final = 2.0, t_init = 0.0;
-	double h = 0.001;
+	double h = 0.0001;
 	int steps = int((t_final - t_init)/h);
 
 	// Parameters
@@ -36,26 +36,25 @@ int main (int, char **) {
 		v[n] = new double[neurons];
 	}
 	// Initialise v
-	for (int n = 0; n < neurons; n++) {
+	for (size_t n = 0; n < neurons; n++) {
 		v[0][n] = v0;
 	}
 
-	// double v_avg2[steps + 1] = {v0}; // Gives some random warning
-	double v_avg[steps + 1];
-	v_avg[0] = v0;
+	double v_avg[steps + 1] = {v0};
 
 	// Loop
-	for (int i = 1; i < steps + 1; i++) {
-		for (int n = 0; n < neurons; n++) {
+	for (size_t i = 1; i < steps + 1; i++) {
+		for (size_t n = 0; n < neurons; n++) {
 			if(v[i-1][n] >= vp) {
 				v[i][n] = -vp;
 			}
 			else {
 				v[i][n] = v[i-1][n] + h * ( pow(v[i-1][n], 2) + I[i] + eta[n] );
 			}
-			// Remove unnecessary vectors
-			v_avg[i] += v[i][n];
+			v_avg[i] += v[i][n]; // Mean membrane potential
 		}
+		cout << "step " << i << "\n";
+		// delete[] v[i-1]; // Remove unnecessary vectors
 		v_avg[i] = v_avg[i]/neurons;
 	}
 
