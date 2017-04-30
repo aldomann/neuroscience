@@ -12,8 +12,8 @@ using std::tan;
 
 int main () {
 	// Time
-	double t_final = 2.0, t_init = 0.0;
-	double h = 0.1;
+	double t_final = 20.0, t_init = 0.0;
+	double h = 0.001;
 	int steps = int((t_final - t_init)/h);
 
 	// Parameters
@@ -54,7 +54,8 @@ int main () {
 			v_avg[i] += v[i][n]; // Mean membrane potential
 		}
 		cout << "step " << i << "/" << steps << " done\n";
-		v.erase( v.begin()-i+1); // Erase row v[i-1]
+		// v.erase( v.begin()-i+1); // Erase row v[i-1]
+		v[i-1].clear();
 		v_avg[i] = v_avg[i]/neurons;
 	}
 	v.erase( v.begin()+steps+1 ); // Erase last row
