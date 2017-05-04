@@ -12,8 +12,8 @@ using std::tan;
 
 int main () {
 	// Time
-	double t_final = 20.0, t_init = 0.0;
-	double h = 0.001;
+	double t_final = 1.0, t_init = 0.0;
+	double h = 0.0001;
 	int steps = int((t_final - t_init)/h);
 
 	// Parameters
@@ -32,10 +32,21 @@ int main () {
 	double I[steps+1];
 	std::fill_n(I, steps+1, I0);
 
+	// // Membrane potential matrix using st::vector
+	// vector<vector<double>> v;
+	// v.resize(steps + 1, vector<double>(neurons));
+	// // Initialise v
+	// for (size_t n = 0; n < neurons; n++) {
+	// 	v[0][n] = v0;
+	// }
+
 	// Membrane potential matrix using st::vector
-	vector<vector<double>> v;
-	v.resize(steps + 1, vector<double>(neurons));
-	// Initialise v
+	vector< vector<double> > v;
+	v.resize(steps+1, vector<double> );
+
+	// Initialise v[0]
+	v.resize(1);
+	// v[0].resize(neurons, v0);
 	for (size_t n = 0; n < neurons; n++) {
 		v[0][n] = v0;
 	}
@@ -44,7 +55,10 @@ int main () {
 
 	// Loop
 	for (size_t i = 1; i < steps + 1; i++) {
+		// v.push_back(vector<double>());
+		v[i].resize(neurons);
 		for (size_t n = 0; n < neurons; n++) {
+			// Calculations
 			if(v[i-1][n] >= vp) {
 				v[i][n] = -vp;
 			}
@@ -54,11 +68,10 @@ int main () {
 			v_avg[i] += v[i][n]; // Mean membrane potential
 		}
 		cout << "step " << i << "/" << steps << " done\n";
-		// v.erase( v.begin()-i+1); // Erase row v[i-1]
-		v[i-1].clear();
+		v[i-1].clear(); // Clear row v[i-1]
 		v_avg[i] = v_avg[i]/neurons;
 	}
-	v.erase( v.begin()+steps+1 ); // Erase last row
+	v[steps+1].clear(); // Clear last row
 
 	// Save values in text file
 	ofstream myfile ("v_avg_vec.dat");
