@@ -3,6 +3,8 @@ library(data.table)
 
 # Calculations ---------------------------------------------
 
+sys.time.init <- Sys.time()
+
 # Compile C++ file if needed
 # This won't work for C++ cin inputs (or of any kind, I would imagine)
 compile = T
@@ -46,3 +48,7 @@ get_vplot <- function(plot.type = "qif"){
 
 # get_vplot()
 get_vplot(plot.type = "fre+qif")
+
+sys.time.final <- Sys.time()
+
+sys.time.final - sys.time.init
