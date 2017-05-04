@@ -17,11 +17,11 @@ int main () {
 	double I0 = 3.0;
 
 	// Time parameters
-	double t_final = 2.0, t_init = 0.0;
+	double t_final = 10.0, t_init = 0.0;
 	double h = 0.0001;
 	int steps = int((t_final - t_init)/h);
 	// double refract_steps = int( 1/(vp * h) );
-	double refract_steps = 1; // For test purposes
+	double refract_steps = 5; // For testing purposes
 
 	// Initialize eta vector
 	vector<double> eta(neurons);
@@ -66,15 +66,11 @@ int main () {
 				v[1][n] = -vp;
 				spike_times[n] = i; // Needed to calculate refractory times
 			}
-			else {
-				if ( spike_times[n] == 0 ){ // Normal evolution
-					v[1][n] = v[0][n] + h * ( pow(v[0][n], 2) + I[i] + eta[n] );
-				}
-				else { // Refractory neuron
-					if (spike_times[n] + refract_steps < i) { // Reset refractory time
-						spike_times[n] = 0;
-					}
-				}
+			else if ( spike_times[n] == 0 ){ // Normal evolution
+				v[1][n] = v[0][n] + h * ( pow(v[0][n], 2) + I[i] + eta[n] );
+			}
+			else if (spike_times[n] + refract_steps < i) { // Reset refractory time
+				spike_times[n] = 0;
 			}
 			v[0][n] = v[1][n]; // Reset matrix
 			v_avg[i] += v[1][n];
