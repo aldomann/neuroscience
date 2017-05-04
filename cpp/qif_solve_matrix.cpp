@@ -18,6 +18,7 @@ int main () {
 
 	// Parameters
 	int neurons = pow(10, 4);
+	// int neurons = 5;
 	double v0 = -2.0, vp = 100.0;
 	double I0 = 3.0;
 
@@ -32,32 +33,30 @@ int main () {
 	double I[steps+1];
 	std::fill_n(I, steps+1, I0);
 
-	// // Membrane potential matrix using st::vector
-	// vector<vector<double>> v;
-	// v.resize(steps + 1, vector<double>(neurons));
-	// // Initialise v
-	// for (size_t n = 0; n < neurons; n++) {
-	// 	v[0][n] = v0;
-	// }
-
 	// Membrane potential matrix using st::vector
 	vector< vector<double> > v;
-	v.resize(steps+1, vector<double> );
 
-	// Initialise v[0]
-	v.resize(1);
-	// v[0].resize(neurons, v0);
-	for (size_t n = 0; n < neurons; n++) {
+	// First time step (initial state)
+	vector<double> row; // Create an empty row
+	for (int n = 0; n < neurons; n++) { // Initialise first row
+		row.push_back(1 * n); // Add a column to the row
+	}
+	v.push_back(row); // Add the row to the main vector
+
+	for (int n = 0; n < neurons; n++) { // Assign values to the first row
 		v[0][n] = v0;
 	}
 
 	double v_avg[steps + 1] = {v0};
 
 	// Loop
-	for (size_t i = 1; i < steps + 1; i++) {
-		// v.push_back(vector<double>());
-		v[i].resize(neurons);
-		for (size_t n = 0; n < neurons; n++) {
+	for (int i = 1; i < steps + 1; i++) {
+		vector<double> row; // Create an empty row
+		for (int n = 0; n < neurons; n++) { // Initialise first row
+			row.push_back(i * n); // Add a column to the row
+		}
+		v.push_back(row); // Add the row to the main vector
+		for (int n = 0; n < neurons; n++) {
 			// Calculations
 			if(v[i-1][n] >= vp) {
 				v[i][n] = -vp;
@@ -74,7 +73,7 @@ int main () {
 	v[steps+1].clear(); // Clear last row
 
 	// Save values in text file
-	ofstream myfile ("v_avg_vec.dat");
+	ofstream myfile ("v_avg_mat.dat");
 	if (myfile.is_open()){
 		for ( int i = 0; i < steps+1; i++ ) {
 			myfile << v_avg[i] << ", " ;
