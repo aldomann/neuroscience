@@ -32,7 +32,7 @@ parms <- c(delta = 1,   # lorentzian_halfwidth
 
 init_state <- c(r = 0, v = -2)
 # times <- seq(from = 0, to = 30, by = 0.01)
-times <- seq(from = 0, to = 10, by = 0.0001)
+times <- seq(from = 0, to = 2, by = 0.0001)
 
 # Current function
 get_current <- function(mode, I0, omega, t.init, t.final){
@@ -49,7 +49,7 @@ get_current <- function(mode, I0, omega, t.init, t.final){
 }
 
 # Different current distributions
-current <- get_current("square", I0 = 3, t.init = 0, t.final = 10)
+current <- get_current("square", I0 = 3, t.init = 0, t.final = 2)
 # current <- get_current("sin", I0 = 1, omega = 2*pi, t.init = 0, t.final = 30)
 
 curr_imp <- approxfun(current$times, current$I, rule = 2)
