@@ -24,6 +24,7 @@ v.qif <- read_qif.data()
 get_fre.data <- function(){
 	source("fre_vs_qif_test.R")
 }
+sys.time.comp.final <- Sys.time()
 
 # Data visualisation ---------------------------------------
 
@@ -51,4 +52,5 @@ get_vplot(plot.type = "fre+qif")
 
 sys.time.final <- Sys.time()
 
+sys.time.comp.final - sys.time.init
 sys.time.final - sys.time.init
