@@ -16,7 +16,7 @@ int main () {
 	// double J = 0;
 
 	// Time parameters
-	double t_final = 20, t_init = 0.0;
+	double t_final = 30, t_init = 0.0;
 	double h = 0.0001;
 	int steps = int((t_final - t_init)/h);
 	double refract_steps = int(1/(vp * h));
@@ -34,7 +34,8 @@ int main () {
 	// Initialize instensity vector
 	vector<double> I(steps+1);
 	for (int i = 0; i < steps+1; i++) {
-		I[i] = I0;
+		// I[i] = I0; // Square current
+		I[i] = I0 * sin(h * i * M_PI / 20);
 	}
 
 	// Initialize mean membrane potential vector

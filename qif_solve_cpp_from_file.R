@@ -49,6 +49,7 @@ get_vplot <- function(plot.type = "qif"){
 
 # get_vplot()
 get_vplot(plot.type = "fre+qif")
+# get_vplot(plot.type = "qif")
 
 sys.time.final <- Sys.time()
 
