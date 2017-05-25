@@ -12,13 +12,16 @@ int main () {
 	int neurons = 10000;
 	double v0 = -2.0, vp = 100.0;
 	double I0 = 3.0;
+	// double J = 15;
+	double J = 0;
 
 	// Time parameters
-	double t_final = 10.0, t_init = 0.0;
+	double t_final = 6, t_init = 0.0;
 	double h = 0.0001;
 	int steps = int((t_final - t_init)/h);
-	// double refract_steps = int(1/(vp * h));
-	double refract_steps = 5; // For testing purposes
+	double refract_steps = int(2/(vp * h));
+	// double refract_steps = 1; // For testing purposes
+	double tau = 0.001; // For the synaptic activation
 
 	// Initialize eta vector
 	vector<double> eta(neurons);
@@ -47,6 +50,9 @@ int main () {
 	// Initialize spike_times vector
 	vector<double> spike_times(neurons, 0);
 
+	// Initialize synaptic activation vector
+	vector<double> syn_act(steps, 0);
+
 	// Open file and write first line
 	ofstream myfile ("v_avg.dat"); // Open file
 	myfile << v_avg[0] << ", " ; // Write on the file
@@ -57,16 +63,18 @@ int main () {
 			if(v[0][n] >= vp) { // Emit a spike
 				v[1][n] = -vp;
 				spike_times[n] = i;
-			}
-			else if (spike_times[n] == 0){ // Normal evolution
-				v[1][n] = v[0][n] + h * ( pow(v[0][n], 2) + I[i] + eta[n] );
-			}
-			else if (spike_times[n] + refract_steps < i) { // Reset refractory time
+				for (int k = 0; k < int(tau/h); k++){ // Synaptic activation
+					syn_act[i + int(refract_steps/2) + k] += 1/(tau * neurons);
+				}
+			} else if (spike_times[n] == 0){ // Normal evolution
+				v[1][n] = v[0][n] + h * ( pow(v[0][n], 2) + I[i] + eta[n] + J * syn_act[i] );
+			} else if (spike_times[n] + refract_steps < i) { // Reset refractory time
 				spike_times[n] = 0;
 			}
 			v[0][n] = v[1][n]; // Reset matrix
 			v_avg[i] += v[1][n];
 		}
+		// myfile << v[1][0] << ", " ; // Write one neuron on the file
 		myfile << v_avg[i]/neurons << ", " ; // Write on the file
 	}
 	myfile.close(); // Close file
