@@ -12,7 +12,7 @@ The current code, `fre_ode_solve.R`, plots the firing rate, *r*, the mean membra
 The quadratic integrate-and-fire (QIF) neurons is the canonical model for class I neurons, and, thus, generically describes
 their dynamics near the spiking threshold. Our aim here is to derive the FREs corresponding to a heterogeneous all-to-all coupled population of *N* QIF neurons.
 
-The current code, `qif_solve_cpp_from_file.R` (which uses precompiled QIF neurons using C++), plots the mean membrane potential *v* (FREs), as well as the instantaneous membrane potential (QIF neurons).
+The current code, `qif_solve_cpp_from_file.R` (which uses precompiled QIF neurons using C++), plots the mean membrane potential *v* and mean fire-rate *r* (from the FREs); as well as the instantaneous membrane potential and fire-rate (QIF neurons simulation).
 
 ![image](images/git-qif-plot.png)
 
