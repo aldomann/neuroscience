@@ -14,7 +14,6 @@ if (compile == T) {
 	system("cd cpp; g++ -o run_solve qif_solve.cpp; ./run_solve")
 }
 
-
 read_qif_data <- function(){ # Manually select data file
 	# Read raw data
 	v.data <- t(fread("cpp/v_avg.dat", header = F))

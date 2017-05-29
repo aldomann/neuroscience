@@ -49,7 +49,7 @@ int main () {
 		v[0][n] = v0;
 	}
 
-	// Initialize threshold potential vector
+	// Initialize threshold potential vector (not really necessary)
 	// vector<double> vt(neurons, 0.0);
 
 	// Initialize spike and synaptic activation vectors
@@ -57,23 +57,15 @@ int main () {
 	vector<int> fire_rate(steps+1, 0);
 	vector<double> syn_act(steps+1, 0.0);
 
-	// Open file and write first line
-	ofstream v_file; // Open file
-	ofstream r_file; // Open file
-
-	// ofstream v_file ("v_avg.dat"); // Open file
-	// v_file << v_avg[0] << ", " ; // Write on the file
-	// v_file.close(); // Close file
-
-	// ofstream r_file ("r_avg.dat"); // Open file
-	// r_file << fire_rate[0] << ", " ; // Write on the file
-	// r_file.close(); // Close file
-
+	// Open files
+	ofstream v_file;
+	ofstream r_file;
 	v_file.open("v_avg.dat" ,ios::out);
 	r_file.open("r_avg.dat" ,ios::out);
 
-	v_file << v_avg[0] << ", " ; // Write on the file
-	r_file << fire_rate[0] << ", " ; // Write on the file
+	// Write first lines
+	v_file << v_avg[0] << ", " ;
+	r_file << fire_rate[0] << ", " ;
 
 	// Loop
 	for (int i = 1; i < steps + 1; i++) {
@@ -107,7 +99,6 @@ int main () {
 	}
 	v_file.close(); // Close file
 	r_file.close(); // Close file
-	// v_file.close(); // Close file
 
 	return 0;
 }
