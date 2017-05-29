@@ -16,7 +16,7 @@ int main () {
 	// double J = 0;
 
 	// Time parameters
-	double t_final = 30, t_init = 0.0;
+	double t_final = 5, t_init = 0.0;
 	double h = 0.0001;
 	int steps = int((t_final - t_init)/h);
 	double refract_steps = int(1/(vp * h));
@@ -34,8 +34,8 @@ int main () {
 	// Initialize instensity vector
 	vector<double> I(steps+1);
 	for (int i = 0; i < steps+1; i++) {
-		// I[i] = I0; // Square current
-		I[i] = I0 * sin(h * i * M_PI / 20);
+		I[i] = I0; // Square current
+		// I[i] = I0 * sin(h * i * M_PI / 20);
 	}
 
 	// Initialize mean membrane potential vector
@@ -49,50 +49,65 @@ int main () {
 		v[0][n] = v0;
 	}
 
-	// Initialize spike_times vector
-	vector<int> spike_times(neurons, 0);
-
 	// Initialize threshold potential vector
-	vector<double> vt(neurons, 0.0);
+	// vector<double> vt(neurons, 0.0);
 
-	// Initialize synaptic activation vector
-	vector<double> syn_act(steps, 0.0);
+	// Initialize spike and synaptic activation vectors
+	vector<int> spike_times(neurons, 0);
+	vector<int> fire_rate(steps+1, 0);
+	vector<double> syn_act(steps+1, 0.0);
 
 	// Open file and write first line
-	ofstream myfile ("v_avg.dat"); // Open file
-	myfile << v_avg[0] << ", " ; // Write on the file
-	// myfile << syn_act[0] << ", " ; // Write on the file
+	ofstream v_file; // Open file
+	ofstream r_file; // Open file
 
+	// ofstream v_file ("v_avg.dat"); // Open file
+	// v_file << v_avg[0] << ", " ; // Write on the file
+	// v_file.close(); // Close file
+
+	// ofstream r_file ("r_avg.dat"); // Open file
+	// r_file << fire_rate[0] << ", " ; // Write on the file
+	// r_file.close(); // Close file
+
+	v_file.open("v_avg.dat" ,ios::out);
+	r_file.open("r_avg.dat" ,ios::out);
+
+	v_file << v_avg[0] << ", " ; // Write on the file
+	r_file << fire_rate[0] << ", " ; // Write on the file
 
 	// Loop
 	for (int i = 1; i < steps + 1; i++) {
 		for (int n = 0; n < neurons; n++) {
 			if(spike_times[n] == 0 && v[0][n] >= vp) { // Save time and vt value
-				vt[n] = v[0][n];
+				// vt[n] = v[0][n];
 				spike_times[n] = i;
 			} else if (spike_times[n] == 0) { // Normal evolution
 				v[1][n] = v[0][n] + h * ( pow(v[0][n], 2) + I[i-1] + eta[n] + J * syn_act[i-1] );
 			} else if (i < spike_times[n] + 2 * refract_steps) { // Spikes
 				if (i >= spike_times[n] + refract_steps) { // Post spike
-					v[1][n] = -vt[n];
+					// v[1][n] = -vt[n];
+					v[1][n] = -vp;
+					fire_rate[i] += 1;
 					if (i < spike_times[n] + refract_steps + int(tau/h)) {
 						syn_act[i] += 1/(tau * neurons);
 					}
 				} else {
-					v[1][n] = vt[n]; // Pre spike
+					// v[1][n] = vt[n]; // Pre spike
+					v[1][n] = vp; // Pre spike
 				}
 			} else if (i > spike_times[n] + 2 * refract_steps) { // Reset refractory time
 				spike_times[n] = 0;
-				vt[n] = 0;
+				// vt[n] = 0;
 			}
 			v[0][n] = v[1][n]; // Reset matrix
 			v_avg[i] += v[1][n];
 		}
-		// myfile << v[1][0] << ", " ; // Write one neuron on the file
-		myfile << v_avg[i]/neurons << ", " ; // Write on the file
-		// myfile << syn_act[i] << ", " ; // Write on the file
+		v_file << v_avg[i]/neurons << ", " ; // Write on the file
+		r_file << double(fire_rate[i])/100 << ", " ; // Write on the file
 	}
-	myfile.close(); // Close file
+	v_file.close(); // Close file
+	r_file.close(); // Close file
+	// v_file.close(); // Close file
 
 	return 0;
 }
