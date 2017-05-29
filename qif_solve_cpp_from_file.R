@@ -1,3 +1,6 @@
+# Simulation of the dynamics of neuronal ensembles using the model of FREs and QIF neurons
+# Code developed by Alfredo Hernández and Cristian Estany
+
 library(tidyverse)
 library(data.table)
 
@@ -6,18 +9,11 @@ library(data.table)
 sys.time.init <- Sys.time()
 
 # Compile C++ file if needed
-# This won't work for C++ cin inputs (or of any kind, I would imagine)
 compile = T
 if (compile == T) {
 	system("cd cpp; g++ -o run_solve qif_solve.cpp; ./run_solve")
 }
 
-# read_qif.data <- function(){ # Manually select data file
-# 	v.qif <- t(fread("cpp/v_avg.dat", header = F))
-# 	v.qif <- v.qif[-nrow(v.qif),] # Remove last row
-# 	v.qif <- data.frame(v.avg = v.qif)
-# 	return(v.qif)
-# }
 
 read_qif_data <- function(){ # Manually select data file
 	# Read raw data
@@ -57,17 +53,16 @@ get_plots <- function(){
 	plot_vt <- ggplot(out.fre.qif)+
 		geom_line(mapping = aes(x = time, y = v.agv), colour = "black") +
 		geom_line(mapping = aes(x = time, y = v), colour = "darkorange") +
-		labs(x = "Time (s)", y = "r")
+		labs(x = "Time (s)", y = "v")
 
 	plot_rt <- ggplot(out.fre.qif)+
 		geom_line(mapping = aes(x = time, y = r.agv), colour = "black") +
 		geom_line(mapping = aes(x = time, y = r), colour = "darkorange") +
-		labs(x = "Time (s)", y = "v")
+		labs(x = "Time (s)", y = "r")
 
 	layout <- matrix(c(1,2), nrow = 2, byrow = TRUE)
 	multiplot(plotlist = list(plot_rt, plot_vt), layout = layout)
 }
-
 
 # get_plot_qif()
 get_plots()

@@ -1,11 +1,9 @@
-# This is code to replicate the model of QIF neurons.
+# Simulation to replicate the model of QIF neurons
 # Code developed by Alfredo Hernández and Cristian Estany
 
 # How to use multiplots:
 # http://rstudio-pubs-static.s3.amazonaws.com/2852_379274d7c5734f979e106dcf019ec46c.html
 # http://www.cookbook-r.com/Graphs/Multiple_graphs_on_one_page_(ggplot2)/
-
-# rm(list = ls())
 
 library(deSolve)
 library(tidyverse)

@@ -1,11 +1,9 @@
-# This is code to replicate the model of QIF neurons.
+# Simulation to replicate the model of neurons using FREs
 # Code developed by Alfredo Hernández and Cristian Estany
 
 # How to use multiplots:
 # http://rstudio-pubs-static.s3.amazonaws.com/2852_379274d7c5734f979e106dcf019ec46c.html
 # http://www.cookbook-r.com/Graphs/Multiple_graphs_on_one_page_(ggplot2)/
-
-# rm(list = ls())
 
 library(deSolve)
 library(tidyverse)
@@ -35,7 +33,7 @@ parms <- c(delta = 1,   # lorentzian_halfwidth
 # 					 J = 10.5)       # syn_weight
 
 init_state <- c(r = 0, v = -2)
-times <- seq(from = -10, to = 50, by = 0.01)
+times <- seq(from = -10, to = 20, by = 0.01)
 
 # Current function
 get_current <- function(mode, I0, omega, t.init, t.final){
@@ -52,7 +50,7 @@ get_current <- function(mode, I0, omega, t.init, t.final){
 }
 
 # Different current distributions
-current <- get_current("square", I0 = 3, t.init = 0, t.final = 30)
+current <- get_current("square", I0 = 3, t.init = 0, t.final = 20)
 # current <- get_current("sin", I0 = 1, omega = 2*pi, t.init = 0, t.final = 30)
 
 curr_imp <- approxfun(current$times, current$I, rule = 2)
@@ -62,9 +60,6 @@ curr_imp <- approxfun(current$times, current$I, rule = 2)
 out.fre <- as.data.frame(ode(y = init_state, times = times,
 					 func = my_function, parms = parms, input = curr_imp,
 					 method = "rk4"))
-
-# Calculation time
-# print(system.time(out.fre <- ode(y = init_state, times = times,  func = my_function, parms = parms, method = "rk4")))
 
 # Data visualisation ---------------------------------------
 
@@ -98,7 +93,3 @@ plot_rv_trajectory <- function(data){
 
 plot_rvit(out.fre, current)
 # plot_rv_trajectory(out.fre)
-
-# Raster plot ----------------------------------------------
-
-# dist <- data.frame(eta = rcauchy(1000, location = -5, scale = 1))
