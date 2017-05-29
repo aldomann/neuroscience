@@ -10,6 +10,7 @@ using namespace std;
 int main () {
 	// Physical parameters
 	int neurons = 10000;
+	int sel_neurons = 300;
 	double v0 = -2.0, vp = 100.0;
 	double I0 = 3.0;
 	double J = 15;
@@ -54,14 +55,17 @@ int main () {
 
 	// Initialize spike and synaptic activation vectors
 	vector<int> spike_times(neurons, 0);
+	// vector<int> spikes(sel_neurons, 0);
 	vector<int> fire_rate(steps+1, 0);
 	vector<double> syn_act(steps+1, 0.0);
 
 	// Open files
 	ofstream v_file;
 	ofstream r_file;
+	ofstream raster_file;
 	v_file.open("v_avg.dat" ,ios::out);
 	r_file.open("r_avg.dat" ,ios::out);
+	raster_file.open("raster.dat" ,ios::out);
 
 	// Write first lines
 	v_file << v_avg[0] << ", " ;
@@ -71,34 +75,36 @@ int main () {
 	for (int i = 1; i < steps + 1; i++) {
 		for (int n = 0; n < neurons; n++) {
 			if(spike_times[n] == 0 && v[0][n] >= vp) { // Save time and vt value
-				// vt[n] = v[0][n];
 				spike_times[n] = i;
 			} else if (spike_times[n] == 0) { // Normal evolution
 				v[1][n] = v[0][n] + h * ( pow(v[0][n], 2) + I[i-1] + eta[n] + J * syn_act[i-1] );
 			} else if (i < spike_times[n] + 2 * refract_steps) { // Spikes
 				if (i >= spike_times[n] + refract_steps) { // Post spike
-					// v[1][n] = -vt[n];
 					v[1][n] = -vp;
 					fire_rate[i] += 1;
+					if (n < sel_neurons && i == spike_times[n] + refract_steps + 1){ // Only consider selected neurons
+						raster_file << double(i) * h << " " << n + 1 << endl ;
+					}
 					if (i < spike_times[n] + refract_steps + int(tau/h)) {
 						syn_act[i] += 1/(tau * neurons);
 					}
 				} else {
-					// v[1][n] = vt[n]; // Pre spike
 					v[1][n] = vp; // Pre spike
 				}
 			} else if (i > spike_times[n] + 2 * refract_steps) { // Reset refractory time
 				spike_times[n] = 0;
-				// vt[n] = 0;
 			}
 			v[0][n] = v[1][n]; // Reset matrix
 			v_avg[i] += v[1][n];
 		}
-		v_file << v_avg[i]/neurons << ", " ; // Write on the file
-		r_file << double(fire_rate[i])/100 << ", " ; // Write on the file
+		// Save values on files
+		v_file << v_avg[i]/neurons << ", " ;
+		r_file << double(fire_rate[i])/100 << ", " ;
 	}
-	v_file.close(); // Close file
-	r_file.close(); // Close file
+	// Close files
+	v_file.close();
+	r_file.close();
+	raster_file.close();
 
 	return 0;
 }
