@@ -12,44 +12,65 @@ if (compile == T) {
 	system("cd cpp; g++ -o run_solve qif_solve.cpp; ./run_solve")
 }
 
-read_qif.data <- function(){ # Manually select data file
-	v.qif <- t(fread("cpp/v_avg.dat", header = F))
-	v.qif <- v.qif[-nrow(v.qif),] # Remove last row
-	v.qif <- data.frame(v.avg = v.qif)
-	return(v.qif)
+# read_qif.data <- function(){ # Manually select data file
+# 	v.qif <- t(fread("cpp/v_avg.dat", header = F))
+# 	v.qif <- v.qif[-nrow(v.qif),] # Remove last row
+# 	v.qif <- data.frame(v.avg = v.qif)
+# 	return(v.qif)
+# }
+
+read_qif_data <- function(){ # Manually select data file
+	# Read raw data
+	v.data <- t(fread("cpp/v_avg.dat", header = F))
+	r.data <- t(fread("cpp/r_avg.dat", header = F))
+	# Remove last rows
+	v.data <- v.data[-nrow(v.data),]
+	r.data <- r.data[-nrow(r.data),]
+	# Create data frame
+	qif.data <- data.frame(v.avg = v.data, r.avg = r.data)
+
+	return(qif.data)
 }
 
-v.qif <- read_qif.data()
+qif.data <- read_qif_data()
 
-get_fre.data <- function(){
+get_fre_data <- function(){
 	source("fre_vs_qif_test.R")
 }
 sys.time.comp.final <- Sys.time()
 
 # Data visualisation ---------------------------------------
 
-get_vplot <- function(plot.type = "qif"){
-	if (plot.type == "qif") { # Just QIF plot
-		ggplot(v.qif)+
-			geom_line(mapping = aes(y = v.avg, x = seq(1, length(v.avg))),
-								colour = "darkorange") +
-			labs(x = "Time (s)", y = "v")
-	}
-	else if (plot.type == "fre+qif") { # Comparison with FRE model
-		get_fre.data()
-		out.fre.qif <- out.fre
-		out.fre.qif$v.agv <- v.qif$v.avg
-
-		ggplot(out.fre.qif)+
-			geom_line(mapping = aes(x = time, y = v.agv), colour = "black") +
-			geom_line(mapping = aes(x = time, y = v), colour = "darkorange") +
-			labs(x = "Time (s)", y = "v")
-	}
+get_plot_qif <- function(){
+	ggplot(qif.data)+
+		geom_line(mapping = aes(y = v.avg, x = seq(1, length(v.avg))),
+							colour = "darkorange") +
+		labs(x = "Time (s)", y = "v")
 }
 
-# get_vplot()
-get_vplot(plot.type = "fre+qif")
-# get_vplot(plot.type = "qif")
+get_plots <- function(){
+	get_fre_data()
+	out.fre.qif <- out.fre
+	out.fre.qif$v.agv <- qif.data$v.avg
+	out.fre.qif$r.agv <- qif.data$r.avg
+
+	plot_vt <- ggplot(out.fre.qif)+
+		geom_line(mapping = aes(x = time, y = v.agv), colour = "black") +
+		geom_line(mapping = aes(x = time, y = v), colour = "darkorange") +
+		labs(x = "Time (s)", y = "r")
+
+	plot_rt <- ggplot(out.fre.qif)+
+		geom_line(mapping = aes(x = time, y = r.agv), colour = "black") +
+		geom_line(mapping = aes(x = time, y = r), colour = "darkorange") +
+		labs(x = "Time (s)", y = "v")
+
+	layout <- matrix(c(1,2), nrow = 2, byrow = TRUE)
+	multiplot(plotlist = list(plot_rt, plot_vt), layout = layout)
+}
+
+
+# get_plot_qif()
+get_plots()
 
 sys.time.final <- Sys.time()
 
