@@ -50,8 +50,8 @@ get_fre_data <- function(){
 
 get_fre_data()
 out.fre.qif <- out.fre
-out.fre.qif$v.agv <- qif.data$v.avg
-out.fre.qif$r.agv <- qif.data$r.avg
+out.fre.qif$v.avg <- qif.data$v.avg
+out.fre.qif$r.avg <- qif.data$r.avg
 
 sys.time.fre.final <- Sys.time()
 
@@ -64,52 +64,14 @@ get_plot_qif <- function(){
 		labs(x = "Time (s)", y = "v")
 }
 
-# get_plots_legacy <- function(){
-# 	get_fre_data()
-# 	out.fre.qif <- out.fre
-# 	out.fre.qif$v.agv <- qif.data$v.avg
-# 	out.fre.qif$r.agv <- qif.data$r.avg
-#
-# 	plot_vt <- ggplot(out.fre.qif)+
-# 		geom_line(aes(x = time, y = v.agv), colour = "black") +
-# 		geom_line(aes(x = time, y = v), colour = "darkorange") +
-# 		labs(y = "v") +
-# 		theme(axis.title.x=element_blank(),
-# 					axis.text.x=element_blank(),
-# 					axis.ticks.x=element_blank())
-#
-# 	plot_rt <- ggplot(out.fre.qif)+
-# 		geom_line(aes(x = time, y = r.agv), colour = "black") +
-# 		geom_line(aes(x = time, y = r), colour = "darkorange") +
-# 		labs(y = "r") +
-# 		theme(axis.title.x=element_blank(),
-# 					axis.text.x=element_blank(),
-# 					axis.ticks.x=element_blank())
-#
-# 	plot_raster <- ggplot(raster.data) +
-# 		geom_point(aes(x = time, y = neuron), colour = "black", size = 0.2) +
-# 		expand_limits(x = 0) +
-# 		labs(y = "Neuron index") +
-# 		theme(axis.title.x=element_blank(),
-# 					axis.text.x=element_blank(),
-# 					axis.ticks.x=element_blank())
-#
-# 	plot_curr <- ggplot(current)+
-# 		geom_line(mapping = aes(x = times, y = I)) +
-# 		labs(x = "Time (s)", y = "I(t)")
-#
-# 	layout <- matrix(c(1,1,1,2,2,2,3,3,3,4,4), nrow = 11, byrow = TRUE)
-# 	multiplot(plotlist = list(plot_rt, plot_vt, plot_raster, plot_curr), layout = layout)
-# }
-
 get_plots <- function(){
 	plot_vt <- ggplot(out.fre.qif)+
-		geom_line(aes(x = time, y = v.agv), colour = "black") +
+		geom_line(aes(x = time, y = v.avg), colour = "black") +
 		geom_line(aes(x = time, y = v), colour = "darkorange") +
 		labs(x = "Time (s)", y = "v")
 
 	plot_rt <- ggplot(out.fre.qif)+
-		geom_line(aes(x = time, y = r.agv), colour = "black") +
+		geom_line(aes(x = time, y = r.avg), colour = "black") +
 		geom_line(aes(x = time, y = r), colour = "darkorange") +
 		labs(x = "Time (s)", y = "r")
 
@@ -131,9 +93,16 @@ get_plots <- function(){
 	pm
 }
 
-# get_plot_qif()
-# get_plots_legacy()
+# Figure 3b
+plot_rv_trajectory <- function(data){
+	ggplot(data)+
+		geom_path(mapping = aes(x = r.avg, y = v.avg), colour = "black", size = 0.3) +
+		geom_path(mapping = aes(x = r, y = v), colour = "darkorange", size = 0.9) +
+		labs(x = "r", y = "v")
+}
+
 get_plots()
+plot_rv_trajectory(out.fre.qif)
 
 sys.time.final <- Sys.time()
 
