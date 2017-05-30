@@ -7,6 +7,7 @@
 
 library(deSolve)
 library(tidyverse)
+library(GGally)
 # source("http://peterhaschke.com/Code/multiplot.R")
 source("multiplot.R")
 
@@ -33,7 +34,8 @@ parms <- c(delta = 1,   # lorentzian_halfwidth
 # 					 J = 10.5)       # syn_weight
 
 init_state <- c(r = 0, v = -2)
-times <- seq(from = -10, to = 20, by = 0.01)
+times <- seq(from = -10, to = 40, by = 0.01)
+# times <- seq(from = -10, to = 80, by = 0.01)
 
 # Current function
 get_current <- function(mode, I0, omega, t.init, t.final){
@@ -50,8 +52,8 @@ get_current <- function(mode, I0, omega, t.init, t.final){
 }
 
 # Different current distributions
-current <- get_current("square", I0 = 3, t.init = 0, t.final = 20)
-# current <- get_current("sin", I0 = 1, omega = 2*pi, t.init = 0, t.final = 30)
+current <- get_current("square", I0 = 3, t.init = 0, t.final = 30)
+# current <- get_current("sin", I0 = 3, omega = pi/20, t.init = 0, t.final = 80)
 
 curr_imp <- approxfun(current$times, current$I, rule = 2)
 
@@ -79,8 +81,15 @@ plot_rvit <- function(data, current){
 		geom_line(mapping = aes(x = times, y = I)) +
 		labs(x = "Time (s)", y = "I(t)")
 
-	layout <- matrix(c(1,2,3), nrow = 3, byrow = TRUE)
-	multiplot(plotlist = list(plot_rt, plot_vt, plot_curr), layout = layout)
+	# layout <- matrix(c(1,2,3), nrow = 3, byrow = TRUE)
+	# multiplot(plotlist = list(plot_rt, plot_vt, plot_curr), layout = layout)
+	pm <- ggmatrix(list(plot_rt, plot_vt, plot_curr),
+								 nrow = 3, ncol = 1,
+								 yAxisLabels = c("r", "v", "I(t)"),
+								 xlab = "Time (s)") +
+		theme( #strip.background = element_rect(fill = "white"),
+			strip.placement = "outside")
+	pm
 }
 
 # Figure 3b
