@@ -4,15 +4,16 @@ This is code simulates the dynamics of neuronal ensembles using the model of FRE
 ## FREs (macroscopic model)
 The macroscopic dynamics of neuronal ensembles are studied using the the firing-rate equations (FREs). The equations and model descriptions can be found in [1].
 
-The current code, `fre_ode_solve.R`, plots the firing rate, *r*, the mean membrane potential, *v*, and the applied current, *I(t)*:
+The code, `fre_ode_solve.R`, plots the firing rate *r*, the mean membrane potential *v*, and the external current stimulus *I(t)*. Below we can see both the system behaviour under a square and a sinusoidal external current:
 
-![image](images/git-fre-plot.png)
+![image](images/git-fre-square.png)
+![image](images/git-fre-sin.png)
 
 ## QIF (microscopic model)
 The quadratic integrate-and-fire (QIF) neurons is the canonical model for class I neurons, and, thus, generically describes
 their dynamics near the spiking threshold. Our aim here is to derive the FREs corresponding to a heterogeneous all-to-all coupled population of *N* QIF neurons.
 
-The current code, `qif_solve_cpp_from_file.R` (which uses precompiled QIF neurons using C++), plots the mean membrane potential *v* and mean fire-rate *r* (from the FREs); the instantaneous membrane potential and fire-rate (QIF neurons simulation); a raster plot of 300 randomly selected QIF neurons; and the current stimulus *I(t)*.
+The code, `qif_solve_cpp_from_file.R` (which can used precompiled QIF neurons using C++; or compile them from `qif_solve.cpp`), plots the mean membrane potential *v* and mean fire-rate *r* (from the FREs); the instantaneous membrane potential and fire-rate (QIF neurons simulation); a raster plot of 300 randomly selected QIF neurons; and the external current stimulus *I(t)*:
 
 ![image](images/git-qif-plot.png)
 
