@@ -54,7 +54,6 @@ get_current <- function(mode, I0, omega, t.init, t.final){
 # Different current distributions
 current <- get_current("square", I0 = 3, t.init = 0, t.final = 30)
 # current <- get_current("sin", I0 = 3, omega = pi/20, t.init = 0, t.final = 80)
-
 curr_imp <- approxfun(current$times, current$I, rule = 2)
 
 # ODE Calculation ------------------------------------------
@@ -81,14 +80,11 @@ plot_rvit <- function(data, current){
 		geom_line(mapping = aes(x = times, y = I)) +
 		labs(x = "Time (s)", y = "I(t)")
 
-	# layout <- matrix(c(1,2,3), nrow = 3, byrow = TRUE)
-	# multiplot(plotlist = list(plot_rt, plot_vt, plot_curr), layout = layout)
 	pm <- ggmatrix(list(plot_rt, plot_vt, plot_curr),
 								 nrow = 3, ncol = 1,
 								 yAxisLabels = c("r", "v", "I(t)"),
 								 xlab = "Time (s)") +
-		theme( #strip.background = element_rect(fill = "white"),
-			strip.placement = "outside")
+		theme(strip.placement = "outside")
 	pm
 }
 
